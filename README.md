@@ -16,13 +16,13 @@ After updating the code, click the reload icon on the extension card. The right-
 
 ## Usage
 
-Right-click on a page, or right-click the extension icon, to open the menu. Chrome doesn't let extensions add items to the tab's own right-click menu.
+Click the extension icon to exclude the current tab from auto-free, and click again to include it. An excluded tab shows an "off" badge on the icon. Right-click on a page, or right-click the icon, to open the menu. Chrome doesn't let extensions add items to the tab's own right-click menu.
 
 ## Features
 
-- **Free tab memory (discard):** frees the current tab on demand. Also available by clicking the toolbar icon. If it's the active tab, you're switched to a neighbouring tab first, because Chrome can't discard the foreground tab.
+- **Free tab memory (discard):** frees the current tab on demand, from the right-click menu. If it's the active tab, you're switched to a neighbouring tab first, because Chrome can't discard the foreground tab.
 - **Auto-free idle tabs:** every minute, tabs not opened for more than 5 minutes are discarded. Pinned tabs and tabs playing audio are skipped. On by default, toggle from the menu.
-- **Exclude a tab from auto-free:** "Exclude this tab from auto-free" in the menu protects a single tab. The same item then reads "Include this tab in auto-free". Lasts for the browser session.
+- **Exclude a tab from auto-free:** clicking the toolbar icon (or "Exclude this tab from auto-free" in the menu) protects a single tab, and clicking again includes it. Excluded tabs show an "off" badge. Lasts for the browser session.
 - **Busy-tab protection:** a tab is not freed, by auto or manual, if it looks busy: text typed into a field and not yet submitted or audio or video currently playing. The manual action shows a "!" badge when it refuses.
 - **Lazy-load reopened tab groups:** when a tab group is reopened, only the foreground tab loads. The other new background tabs in the group are discarded as soon as their URL is known, avoiding a memory and CPU spike. On by default, toggle from the menu.
 

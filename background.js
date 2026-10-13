@@ -12,10 +12,15 @@ async function toggleExclude(tabId) {
   await chrome.storage.session.set({ ex: next });
   return label(tabId);
 }
+// Menu label + per-tab icon badge ("off" = excluded). Tab-level badges reset on navigation, so reapply on load.
 async function label(tabId) {
-  chrome.contextMenus.update("exclude", { title: (await excluded()).includes(tabId) ? INCLUDE : EXCLUDE });
+  const on = (await excluded()).includes(tabId);
+  chrome.contextMenus.update("exclude", { title: on ? INCLUDE : EXCLUDE });
+  chrome.action.setBadgeText({ tabId, text: on ? "off" : "" });
+  chrome.action.setTitle({ tabId, title: on ? "Excluded from auto-free (click to include)" : "Auto-free on (click to exclude)" });
 }
 chrome.tabs.onActivated.addListener(({ tabId }) => label(tabId));
+chrome.tabs.onUpdated.addListener((id, info) => info.status === "complete" && label(id));
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({ id: "free", title: "Free tab memory (discard)", contexts: ["page", "action"] });
@@ -29,7 +34,7 @@ chrome.runtime.onInstalled.addListener(() => {
 async function free(tab) {
   if (await dirty(tab.id)) { // unsaved input: refuse and flag it
     chrome.action.setBadgeText({ tabId: tab.id, text: "!" });
-    return void setTimeout(() => chrome.action.setBadgeText({ tabId: tab.id, text: "" }), 3000);
+    return void setTimeout(() => label(tab.id), 3000);
   }
   // Chrome refuses to discard the foreground tab, so switch to a neighbour first.
   if (tab.active) {
@@ -45,7 +50,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) =>
     : info.menuItemId === "exclude" ? toggleExclude(tab.id)
     : chrome.storage.local.set({ [info.menuItemId]: info.checked })
 );
-chrome.action.onClicked.addListener(free);
+chrome.action.onClicked.addListener((tab) => toggleExclude(tab.id));
 
 // Reopened tab groups: keep only the foreground tab loaded, discard the new background ones as soon as their URL is known.
 // ponytail: also catches ctrl+clicked links opened into a group; set is lost if the worker sleeps mid-restore.
