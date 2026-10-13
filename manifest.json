@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Free Tab Memory",
-  "version": "1.2",
+  "version": "1.3",
   "permissions": ["contextMenus", "tabs", "alarms", "storage"],
   "background": { "service_worker": "background.js" },
   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["dirty.js"] }],
